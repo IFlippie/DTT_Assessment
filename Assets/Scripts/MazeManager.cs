@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MazeManager : MonoBehaviour
 {
     public Maze maze;
+    public Text x, y;
 
     [HideInInspector]
     public Maze mazeInstance;
@@ -19,18 +19,40 @@ public class MazeManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
-            StartMaze();
+            //StartMaze();
         }
     }
 
-    public void StartMaze() 
+    //instantiate the maze DFS style
+    public void StartDFS() 
     {
         if (mazeInstance != null) 
         {
             Destroy(mazeInstance.gameObject);
-        }       
-        mazeInstance = Instantiate(maze);
-        //mazeInstance.Generate();
-        StartCoroutine(mazeInstance.GenerateInSteps());
+        }
+
+        //checks the text but doesn't prevent against non number characters
+        if (x.text != null && y.text != null) 
+        {
+            mazeInstance = Instantiate(maze);
+            mazeInstance.size = new IntVector2(int.Parse(x.text), int.Parse(y.text));
+            StartCoroutine(mazeInstance.Generate());
+        }      
+    }
+
+    //instantiate the maze automata style
+    public void StartAutomata()
+    {
+        if (mazeInstance != null)
+        {
+            Destroy(mazeInstance.gameObject);
+        }
+
+        if (x.text != null && y.text != null)
+        {
+            mazeInstance = Instantiate(maze);
+            mazeInstance.size = new IntVector2(int.Parse(x.text), int.Parse(y.text));
+            StartCoroutine(mazeInstance.GenerateAutomata());
+        }
     }
 }
